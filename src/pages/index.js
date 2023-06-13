@@ -1,118 +1,115 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
-
+import Head from "next/head";
+import Image from "next/image";
+import Navbar from "../../components/NotLoggedIn";
+import HeaderInfo from "../../components/HeaderIntro";
+import MainBody from "../../components/MainBody";
+import MainBody2 from "../../components/MainBody2";
+import Link from "next/link";
+import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/services/firebase";
+import { useState } from "react";
+import { useEffect } from "react";
 export default function Home() {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const fetchBlogs = async () => {
+    const docRef = collection(db, "generalBlogs");
+    const getData = await getDocs(docRef);
+    const docs = [];
+    getData.forEach((doc) => {
+      docs.push({ id: doc.id, ...doc.data() });
+    });
+    return docs;
+  };
+  const { data } = useQuery(["generalblog"], fetchBlogs);
+  console.log(data);
+
+  function getRandomNumber(min, max) {
+    // Calculate the range
+    const range = max - min + 1;
+
+    // Generate a random number within the range and shift it to the desired range
+    const randomNumber = Math.floor(Math.random() * range) + min;
+
+    return randomNumber;
+  }
+
+  // Usage example
+  const randomNum = getRandomNumber(3, 10);
+  console.log(randomNum);
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <Head>
+        <title>Medium | Home</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      </Head>
+      {isAuthenticated ? (
+        <div className="pt-20">
+          <div className="ml-4 pl-6 mb-10 w-[60%] pb-2 border-b border-gray-300">
+            <span className="border-b pb-2 border-black">For You</span>
+          </div>
+          {data &&
+            data?.map((blog) => {
+              return (
+                <div className="grid grid-cols-2 pl-6 ml-4 border-b border-gray-300 w-[60%] lg: space-x-10 space-x-15 py-4 items-center">
+                  <div className="font-instrumental">
+                    <div className="flex gap-2 items-center">
+                      <Image
+                        className="w-5 h-5 rounded-full"
+                        style={{ objectFit: "cover" }}
+                        height={30}
+                        width={30}
+                        src={
+                          "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+                        }
+                        alt="profile-pic"
+                      />
+                      <span className="text-xs font-medium">
+                        {blog.authorFullName}
+                      </span>
+                    </div>
+                    <h1 className="font-medium">{blog.title}</h1>
+                    <span className="text-neutral-500 text-sm font-normal">
+                      {blog.subTitle}
+                    </span>
+                    <div className="flex items-center">
+                      <span className="text-xs text-neutral-500 font-light">
+                        May 19
+                      </span>
+                      <div className="text-xs text-neutral-500 font-light mx-1">
+                        .
+                      </div>
+                      <span className="text-xs text-neutral-500 font-light">
+                        7 mins read
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <Image
+                      className="sm:w-[150px] sm:h-[150px] w-[90] h-[90]"
+                      src={
+                        "https://images.unsplash.com/photo-1461280360983-bd93eaa5051b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+                      }
+                      height={200}
+                      width={200}
+                      style={{ objectFit: "cover" }}
+                      alt="blog-pic"
+                    />
+                  </div>
+                </div>
+              );
+            })}
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      ) : (
+        <div>
+          <HeaderInfo />
+          <MainBody />
+          <MainBody2 />
+        </div>
+      )}
+    </>
+  );
 }
