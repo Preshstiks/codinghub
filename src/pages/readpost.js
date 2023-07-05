@@ -6,6 +6,9 @@ import { GoComment } from "react-icons/go";
 import { MdOutlineCancel } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import Comments from "../../components/Comments";
+import { doc } from "firebase/firestore";
+import { db } from "@/services/firebase";
+import { useRouter } from "next/router";
 const ReadPost = () => {
   const [likeBtn, setLikeBtn] = useState(true);
   const [sideBar, setSideBar] = useState(false);
@@ -21,6 +24,11 @@ const ReadPost = () => {
 
   const handleLike = () => {
     setLikeBtn(!likeBtn);
+  };
+  const router = useRouter();
+  const { id } = router.query;
+  const fetchBlogs = async () => {
+    const docRef = doc(db, "generalBlogs", id);
   };
   return (
     <div className="flex">
@@ -166,7 +174,8 @@ const ReadPost = () => {
             animate={{ opacity: 1, x: 0, top: 0 }}
             exit={{ opacity: 0, x: 100, top: 0 }}
             transition={{ ease: "easeInOut" }}
-            className="bg-white fixed h-screen overflow-y-auto max-w-[30%] shadow-2xl top-0 right-0 px-4">
+            className="bg-white fixed h-screen overflow-y-auto max-w-[30%] shadow-2xl top-0 right-0 px-4"
+          >
             <div className="pb-[80px] border-b border-gray-300">
               <div className="flex justify-between items-center px-4 py-6">
                 <div className="flex text-xl items-center space-x-2">
@@ -194,7 +203,8 @@ const ReadPost = () => {
                 <div className="p-3">
                   <textarea
                     className="text-sm h-auto resize-none w-[300px] py-4 px-4 !outline-none"
-                    placeholder="what are your thoughts?"></textarea>
+                    placeholder="what are your thoughts?"
+                  ></textarea>
                   <div className="flex justify-end py-1">
                     <button className="py-1 px-4 text-sm bg-green-700 hover:bg-green-800 text-white rounded-full">
                       Respond

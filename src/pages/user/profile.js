@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { useState } from "react";
-import UserProfile from "../../components/UserProfile";
-import UserPosts from "../../components/UserPosts";
+import UserProfile from "../../../components/UserProfile";
+import UserPosts from "../../../components/UserPosts";
 import { useSelector } from "react-redux";
 
 const Profile = () => {
@@ -21,7 +20,8 @@ const Profile = () => {
               activeTab === "profile"
                 ? "text-black font-medium border-b-2 rounded-sm border-black pb-3 text-sm cursor-pointer"
                 : "text-gray-500 text-sm hover:text-black cursor-pointer"
-            }>
+            }
+          >
             Profile
           </span>
           <span
@@ -30,7 +30,8 @@ const Profile = () => {
               activeTab === "posts"
                 ? "text-black font-medium border-b-2 rounded-sm border-black pb-3 text-sm cursor-pointer"
                 : "text-gray-500 text-sm hover:text-black cursor-pointer"
-            }>
+            }
+          >
             Posts
           </span>
         </div>

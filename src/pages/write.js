@@ -39,13 +39,62 @@ const Write = () => {
   // const handleSelectImg = () => {
   //   document.getElementById("file-update").click();
   // };
+  const day = new Date().getDate();
+  const month = new Date().getMonth() + 1;
+  const monthNames = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December",
+  };
+  const monthName = monthNames[month];
+  const hours = new Date().getHours();
+  let period;
+  let convertedHrs;
+  const minute = new Date().getMinutes();
+  if (hours === 0) {
+    convertedHrs = 12;
+    period = "AM";
+  } else if (hours < 12) {
+    convertedHrs = hours;
+    period = "AM";
+  } else if (hours === 12) {
+    convertedHrs = 12;
+    period = "PM";
+  } else {
+    convertedHrs = hours - 12;
+    period = "PM";
+  }
+  const time = convertedHrs + ":" + minute + period;
+  const date = monthName + " " + day;
+  const getRandomNumber = (min, max) => {
+    // Calculate the range
+    const range = max - min + 1;
+
+    // Generate a random number within the range and shift it to the desired range
+    const randomNumber = Math.floor(Math.random() * range) + min;
+
+    return randomNumber;
+  };
+
   const createNewBlog = ({ newBlog }) => {
     const blogRef = doc(db, "generalBlogs", newBlog.id);
-
+    const readTime = getRandomNumber(3, 10);
     try {
       setDoc(blogRef, {
         ...newBlog,
         authorId: userId,
+        postedAt: time,
+        Date: date,
+        readTime: readTime + " mins",
       });
     } catch (error) {
       console.log(error);
@@ -65,7 +114,7 @@ const Write = () => {
     };
     mutate({ newBlog });
     const updateNewPost = {
-      generalBlogs: arrayUnion(newPostId),
+      userBlogs: arrayUnion(newPostId),
     };
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
@@ -92,7 +141,8 @@ const Write = () => {
               <motion.div
                 initial={{ opacity: 0, x: 100, top: 0 }}
                 animate={{ opacity: 1, x: 0, top: 0 }}
-                exit={{ opacity: 0, x: 100, top: 0 }}>
+                exit={{ opacity: 0, x: 100, top: 0 }}
+              >
                 <button className="absolute top-0">
                   <BsCardImage className="text-gray-500 text-2xl" />
                 </button>

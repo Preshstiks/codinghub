@@ -11,20 +11,17 @@ import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { rootReducers } from "@/store/reducer/rootReducer";
-
+// import sessionStorage from "redux-persist/es/storage/session";
 export default function App({ Component, pageProps }) {
   const queryClient = new QueryClient();
-
   const persistConfig = {
     key: "root",
     storage,
+    // sessionStorage,
   };
-
   const persistedReducer = persistReducer(persistConfig, rootReducers);
   const enhancers = applyMiddleware(thunk);
-
   const composedEnhancers = composeWithDevTools(enhancers);
-
   const store = createStore(persistedReducer, composedEnhancers);
   const persistor = persistStore(store);
   return (

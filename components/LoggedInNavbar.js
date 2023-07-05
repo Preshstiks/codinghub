@@ -25,9 +25,8 @@ const LoggedInNavbar = () => {
         <div class="relative w-full hidden md:block">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg
-              class="w-5 h-5 text-gray-500"
+              className="w-5 h-5 text-gray-500"
               aria-hidden="true"
-              fillRule="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg">
               <path
@@ -89,7 +88,7 @@ const LoggedInNavbar = () => {
                 Write
               </Link>
               <Link
-                href="/profile"
+                href="/user/profile"
                 class="block px-4 py-2 text-sm text-gray-700">
                 Your Profile
               </Link>
