@@ -18,7 +18,7 @@ export const loginRequest = () => {
     type: "LOGIN_REQUEST",
   };
 };
-export const loginSuccess = (data) => {
+export const loginSuccess = ({ data }) => {
   return {
     type: "LOGIN_SUCCESS",
     payload: data,
