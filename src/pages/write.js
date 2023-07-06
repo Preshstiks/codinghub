@@ -95,6 +95,8 @@ const Write = () => {
         postedAt: time,
         Date: date,
         readTime: readTime + " mins",
+        likes: 0,
+        comments: 0,
       });
     } catch (error) {
       console.log(error);
