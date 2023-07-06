@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { full_Name } = useSelector((state) => state.auth.user);
+  console.log(full_Name);
   const tabClick = (tabPage) => {
     setActiveTab(tabPage);
   };

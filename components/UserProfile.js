@@ -47,7 +47,8 @@ const UserProfile = () => {
         <div className="pt-10">
           <span
             onClick={handleEdit}
-            className="text-sm cursor-pointer text-green-700">
+            className="text-sm cursor-pointer text-green-700"
+          >
             Edit Profile
           </span>
         </div>

@@ -38,8 +38,8 @@ export const authSignIn = async ({
       full_Name: userSignInDetails.user.displayName,
     };
     Router.push("/");
-    console.log(userSignInDetails);
-    dispatch(loginSuccess(user));
+    console.log({ user });
+    dispatch(loginSuccess({ data: user }));
   } catch (error) {
     console.log(error);
     dispatch(loginFailure());
@@ -86,7 +86,6 @@ export const authSignUp = async ({
       email: userSignUpDetails.user.email,
       id: userSignUpDetails.user.uid,
     });
-    dispatch(authSignIn());
   } catch (error) {
     console.log(error);
     dispatch(registerFailure());
