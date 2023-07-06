@@ -86,6 +86,7 @@ export const authSignUp = async ({
       email: userSignUpDetails.user.email,
       id: userSignUpDetails.user.uid,
     });
+    dispatch(loginSuccess(createAUser));
   } catch (error) {
     console.log(error);
     dispatch(registerFailure());

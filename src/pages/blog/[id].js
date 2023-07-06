@@ -6,7 +6,7 @@ import { GoComment } from "react-icons/go";
 import { MdOutlineCancel } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import Comments from "../../../components/Comments";
-import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
+import { doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/services/firebase";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
@@ -71,8 +71,8 @@ const ReadBlog = () => {
       usersComment: comments,
     };
     try {
-      updateDoc(docRef, {
-        c,
+      setDoc(docRef, {
+        commentData,
       });
     } catch (error) {}
   };
