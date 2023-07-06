@@ -18,7 +18,7 @@ const ReadBlog = () => {
   const [count, setCount] = useState(0);
   const [sideBar, setSideBar] = useState(false);
   const [comments, setComments] = useState("");
-  const { full_Name } = useSelector((state) => state.auth.user);
+  // const { full_Name } = useSelector((state) => state.auth.user);
   const handleShowSideBar = () => {
     setSideBar(true);
   };
@@ -65,11 +65,11 @@ const ReadBlog = () => {
   const addComments = async () => {
     const docRef = doc(db, "generalBlogs", id);
     const newCommentId = uuid();
-    const commentData = {
-      userName: full_Name,
-      userCommentId: newCommentId,
-      usersComment: comments,
-    };
+    // const commentData = {
+    //   userName: full_Name,
+    //   userCommentId: newCommentId,
+    //   usersComment: comments,
+    // };
     try {
       setDoc(docRef, {
         commentData,
