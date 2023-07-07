@@ -50,3 +50,9 @@ nav a {
 .footer-name {
   font-weight: 600;
 }
+.no-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+.set-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}

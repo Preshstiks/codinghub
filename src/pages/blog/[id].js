@@ -1,24 +1,31 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsHandThumbsUp } from "react-icons/bs";
 import { BsHandThumbsUpFill } from "react-icons/bs";
 import { GoComment } from "react-icons/go";
 import { MdOutlineCancel } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
-import Comments from "../../../components/Comments";
-import { doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  increment,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/services/firebase";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
+import { ClipLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 
 const ReadBlog = () => {
   const [likeBtn, setLikeBtn] = useState(false);
   const [count, setCount] = useState(0);
   const [sideBar, setSideBar] = useState(false);
   const [comments, setComments] = useState("");
-  // const { full_Name } = useSelector((state) => state.auth.user);
+  const { full_Name } = useSelector((state) => state.auth.user);
   const handleShowSideBar = () => {
     setSideBar(true);
   };
@@ -26,7 +33,6 @@ const ReadBlog = () => {
   const handleHideSideBar = () => {
     setSideBar(false);
   };
-  // const commentBox = useRef(null);
   const router = useRouter();
   const { id } = router.query;
   const fetchBlogs = async (id) => {
@@ -65,18 +71,19 @@ const ReadBlog = () => {
   const addComments = async () => {
     const docRef = doc(db, "generalBlogs", id);
     const newCommentId = uuid();
-    // const commentData = {
-    //   userName: full_Name,
-    //   userCommentId: newCommentId,
-    //   usersComment: comments,
-    // };
     try {
-      setDoc(docRef, {
-        commentData,
+      updateDoc(docRef, {
+        comments: arrayUnion({
+          userName: full_Name,
+          userCommentId: newCommentId,
+          usersComment: comments,
+        }),
       });
-    } catch (error) {}
+      setComments("");
+    } catch (error) {
+      console.log(error);
+    }
   };
-
   const {
     data: blog,
     isLoading,
@@ -84,8 +91,15 @@ const ReadBlog = () => {
   } = useQuery(["fetchBlogsDetails", id], () => fetchBlogs(id), {
     enabled: !!id,
   });
+  console.log(blog);
+
   return (
-    <div>
+    <div className="">
+      {isLoading && (
+        <div className="bg-gray-300 bg-opacity-[20%] flex justify-center h-screen w-full items-center">
+          <PulseLoader color="black" loading={isLoading} size={30} />
+        </div>
+      )}
       {blog && (
         <div className="flex" key={blog?.id}>
           <div className={sideBar ? "bg-gray-100" : "bg-none"}>
@@ -132,7 +146,7 @@ const ReadBlog = () => {
                       className="text-gray-500 text-2xl hover:text-black"
                     />
                     <div className="absolute top-1 text-gray-500 ml-[30px] text-sm">
-                      1
+                      {blog?.comments.length}
                     </div>
                   </div>
                 </div>
@@ -170,7 +184,7 @@ const ReadBlog = () => {
                   <div className="relative">
                     <GoComment className="text-gray-500 text-2xl hover:text-black" />
                     <div className="absolute top-1 text-gray-500 ml-[30px] text-sm">
-                      1
+                      {blog?.comments.length}
                     </div>
                   </div>
                 </div>
@@ -209,7 +223,7 @@ const ReadBlog = () => {
                 animate={{ opacity: 1, x: 0, top: 0 }}
                 exit={{ opacity: 0, x: 100, top: 0 }}
                 transition={{ ease: "easeInOut" }}
-                className="bg-white fixed h-screen overflow-y-auto max-w-[30%] shadow-2xl top-0 right-0 px-4"
+                className="bg-white fixed h-screen no-scrollbar overflow-y-auto max-w-[30%] shadow-2xl top-0 right-0 px-4"
               >
                 <div className="pb-[80px] border-b border-gray-300">
                   <div className="flex justify-between items-center px-4 py-6">
@@ -243,7 +257,7 @@ const ReadBlog = () => {
                         onChange={(e) => setComments(e.target.value)}
                       ></textarea>
                       <div
-                        onClick={handleSubmit}
+                        onClick={addComments}
                         className="flex justify-end py-1"
                       >
                         <button className="py-1 px-4 text-sm bg-green-700 hover:bg-green-800 text-white rounded-full">
@@ -251,39 +265,40 @@ const ReadBlog = () => {
                         </button>
                       </div>
                     </div>
-                    {/* <div
-            contentEditable
-            placeholder="what are your thoughts?"
-            className="h-auto w-[300px] py-4 px-4 !outline-none"></div> */}
                   </div>
                 </div>
                 {/* Comment section */}
-                <div className="px-7 pt-7 pb-[60px] mx-5 mb-5 mt-10 border-b border-gray-300">
-                  <div>
-                    <div className="flex pb-3 items-center space-x-4">
-                      <Image
-                        className="h-9 w-9 rounded-full"
-                        width={700}
-                        height={700}
-                        src={
-                          "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
-                        }
-                        style={{ objectFit: "cover" }}
-                      />
-                      <div className="flex flex-col text-sm">
-                        <span>Davies Precious</span>
-                        <span className="text-gray-400">
-                          about 21 hours ago
-                        </span>
+                {blog?.comments &&
+                  blog?.comments.map((comment) => (
+                    <div
+                      key={comment?.userCommentId}
+                      className="px-7 pt-7 pb-[60px] mx-5 mb-5 mt-10 border-b border-gray-300"
+                    >
+                      <div>
+                        <div className="flex pb-3 items-center space-x-4">
+                          <Image
+                            className="h-9 w-9 rounded-full"
+                            width={700}
+                            height={700}
+                            src={
+                              "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+                            }
+                            style={{ objectFit: "cover" }}
+                          />
+                          <div className="flex flex-col text-sm">
+                            <span>{comment?.userName}</span>
+                            <span className="text-gray-400">
+                              about 21 hours ago
+                            </span>
+                          </div>
+                        </div>
+                        <p className="max-w-[300px] text-sm leading-6">
+                          {comment?.usersComment}
+                        </p>
                       </div>
                     </div>
-                    <p className="max-w-[300px] text-sm leading-6">
-                      I am so guilty of this one in personal projects! Hack hack
-                      hack! Done! It is working fine now, so I am sure it will
-                      be fine in the future”.
-                    </p>
-                  </div>
-                </div>
+                  ))}
+
                 {/* End Comment */}
               </motion.div>
             )}
