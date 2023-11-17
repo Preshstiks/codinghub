@@ -68,28 +68,49 @@ export const authSignUp = async ({
   dispatch,
 }) => {
   dispatch(registerRequest());
-  try {
-    const userSignUpDetails = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+  //   try {
+  //     const userSignUpDetails = await createUserWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
 
-    await updateProfile(auth.currentUser, {
-      displayName: `${lastName} ${firstName}`,
+  //     await updateProfile(auth.currentUser, {
+  //       displayName: `${lastName} ${firstName}`,
+  //     });
+  //     console.log(userSignUpDetails);
+  //     authSignIn({ email, password, dispatch, firstName, lastName });
+  //     createAUser({
+  //       firstName,
+  //       lastName,
+  //       email: userSignUpDetails.user.email,
+  //       id: userSignUpDetails.user.uid,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     dispatch(registerFailure());
+  //   }
+  return createUserWithEmailAndPassword(auth, email, password)
+    .then((userSignUpDetails) => {
+      return updateProfile(auth.currentUser, {
+        displayName: `${lastName} ${firstName}`,
+      })
+        .then(() => {
+          return createAUser({
+            firstName,
+            lastName,
+            email: userSignUpDetails.user.email,
+            id: userSignUpDetails.user.uid,
+          });
+        })
+        .then(() => {
+          authSignIn({ email, password, dispatch, firstName, lastName });
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(registerFailure());
     });
-    console.log(userSignUpDetails);
-    authSignIn({ email, password, dispatch, firstName, lastName });
-    createAUser({
-      firstName,
-      lastName,
-      email: userSignUpDetails.user.email,
-      id: userSignUpDetails.user.uid,
-    });
-  } catch (error) {
-    console.log(error);
-    dispatch(registerFailure());
-  }
 };
 
 export const authLogout = async (dispatch) => {
