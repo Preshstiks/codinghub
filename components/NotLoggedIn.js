@@ -17,54 +17,6 @@ const NotLoggedIn = () => {
   }, []);
 
   return (
-    // <nav
-    //   className={`${
-    //     navColor ? "bg-white z-50" : "bg-cyan-500"
-    //   } sticky ease-in-out duration-700 top-0 border-b border-black`}
-    // >
-    //   <div className="navbar">
-    //     <Link href="/">
-    //       <div className="logo">
-    //         <Image
-    //           className="md:w-[50px] md:h-[50px] w-[35px] h-[35px]"
-    //           src="/medium_icon.png"
-    //           width={50}
-    //           height={50}
-    //           alt="logo"
-    //         />
-    //         <h1 className="medium-logo md:text-[27px] text-[24px] tracking-[-2px]">
-    //           CodingHub
-    //         </h1>
-    //       </div>
-    //     </Link>
-    //     <div className="navlinks flex items-center">
-    //       <Link className="invisible md:visible text-[13px]" href="/">
-    //         Our Story
-    //       </Link>
-    //       <Link className="invisible md:visible text-[13px]" href="/">
-    //         Membership
-    //       </Link>
-    //       <Link className="invisible md:visible text-[13px]" href="/">
-    //         Write
-    //       </Link>
-    //       <div>
-    //         <Link className="text-[13px]" href="/signin">
-    //           Sign In
-    //         </Link>
-    //       </div>
-    //       <div>
-    //         <Link
-    //           className={`${
-    //             navColor ? "bg-green-700 text-[13px]" : "bg-black"
-    //           } rounded-full text-white py-3 px-4 text-[13px]`}
-    //           href="/signup"
-    //         >
-    //           Get Started
-    //         </Link>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </nav>
     <div
       className={`${
         navColor ? "bg-white z-50" : "bg-cyan-500"
