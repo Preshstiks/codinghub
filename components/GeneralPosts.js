@@ -22,8 +22,8 @@ const GeneralPosts = () => {
       {data &&
         data?.map((blog) => {
           return (
-            <div className="grid grid-cols-2 border-b border-gray-300 w-[90%] lg: space-x-10 space-x-15 py-4 items-center">
-              <div className="font-instrumental">
+            <div className="flex items-center justify-between py-4">
+              <div className="font-instrumental w-[100%]">
                 <div className="flex gap-2 items-center">
                   <Image
                     className="w-5 h-5 rounded-full"
@@ -56,7 +56,7 @@ const GeneralPosts = () => {
               </div>
               <div>
                 <Image
-                  className="sm:w-[150px] sm:h-[150px] w-[90] h-[90]"
+                  className="sm:w-[200px] sm:h-[150px] w-[90] h-[90]"
                   src={
                     "https://images.unsplash.com/photo-1461280360983-bd93eaa5051b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
                   }

@@ -16,9 +16,7 @@ body {
   padding: 12px;
 }
 .medium-logo {
-  font-size: 30px;
   font-weight: 600;
-  letter-spacing: -3px;
 }
 .logo {
   display: flex;
